@@ -8,7 +8,7 @@ const CardList = ({ robots }) => {
     return (
         <div> 
             {robots.map((user, i) => {
-                // Return statement is needed in map
+                // Remember to include return statement is needed in map
                 // Need to have this key prop when manipulating iterables
                 return <Card key={robots[i].id} id={robots[i].id} name={robots[i].name} email={robots[i].email} />
             })}
