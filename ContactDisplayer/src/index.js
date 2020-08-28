@@ -1,16 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import CardList from './CardList';
+import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'tachyons';
-import { robots } from './robots'; // Have to destructure this because it is not export default
+
 
 ReactDOM.render(
   // Think of props like passing in arguments that will be available for component to use
-  <div>
-    <CardList robots={robots}/>
-  </div>,
+    <App />,
   document.getElementById('root')
 );
 
