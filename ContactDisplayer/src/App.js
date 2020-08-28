@@ -12,13 +12,20 @@ class App extends Component {
         // This is like the initial state of the app; all cards shown, with a blank search box
         // Will be altered by calls to this.setState()
         this.state = {
-            robots: robots,
+            robots: [],
             searchfield: ''
         }
     }
 
+    componentDidMount() {
+        fetch('https://jsonplaceholder.typicode.com/users')
+            .then(response => response.json())
+            .then(users => this.setState({robots: users})); // Changed the state, so render() is called again 
+    }
+
     // Occurs when text in the search box is changed
     // These methods that will alter state will be sent down the component tree as props
+    // Use arrow functions for these methods that aren't part of React
     onSearchBoxChange = (event) => {
         this.setState({
             searchfield: event.target.value
@@ -37,15 +44,19 @@ class App extends Component {
             return robot.name.toLowerCase().includes(this.state.searchfield.toLowerCase());
         });
 
-        return (
-            <div className='tc'>
-                <h1 className='f1'>Robot Friends</h1>
-
-                {/* Passing method as a prop */}
-                <SearchBox searchChange={this.onSearchBoxChange} /> 
-                <CardList robots={filteredRobots}/>
-            </div>
-        );
+        if (this.state.robots.length === 0) {
+            return <h1>Loading...</h1>
+        } else {
+            return (
+                <div className='tc'>
+                    <h1 className='f1'>Robot Friends</h1>
+    
+                    {/* Passing method as a prop */}
+                    <SearchBox searchChange={this.onSearchBoxChange} /> 
+                    <CardList robots={filteredRobots}/>
+                </div>
+            );
+        }
     }
 }
 
