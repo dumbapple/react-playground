@@ -39,7 +39,7 @@ class App extends Component {
 
         return (
             <div className='tc'>
-                <h1>Robot Friends</h1>
+                <h1 className='f1'>Robot Friends</h1>
 
                 {/* Passing method as a prop */}
                 <SearchBox searchChange={this.onSearchBoxChange} /> 
