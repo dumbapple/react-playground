@@ -4,6 +4,7 @@ import Clarifai from 'clarifai';
 import Particles from 'react-particles-js';
 import Navigation from './components/Navigation/Navigation';
 import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
 import Logo from './components/Logo/Logo';
 import Rank from './components/Rank/Rank';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
@@ -34,7 +35,8 @@ class App extends Component {
       input: '', // User input
       imageURL: '',
       box: '',
-      route: 'signin'
+      route: 'signin',
+      isSignedIn: false
     }
   }
   // The idea is to figure out your state variables, and then write methods that handle
@@ -87,22 +89,47 @@ class App extends Component {
     });
   }
 
+  onRouteChange = (route) => {
+
+    if (route === 'signout') {
+      this.setState({
+        isSignedIn: false
+      })
+    } else if (route ==='home') {
+      this.setState({
+        isSignedIn: true
+      })
+    }
+    this.setState({
+      route: route
+    })
+  }
+
   // Remember to use "this.<prop>"!
   render() {
+    const { isSignedIn, route, imageURL, box } = this.state;
     return (
       <div>
         <Particles className='particles'
         params={particlesOptions} 
       />
-      <Navigation />
-        {this.state.route === 'signin' 
-        ? <SignIn /> 
-        : <div>
+        <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn}/>
+        {route === 'home' 
+        ? <div>
+            
             <Logo />
             <Rank />
             <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-            <FaceDetection box={this.state.box} imageURL={this.state.imageURL} />
-          </div>}
+            <FaceDetection box={box} imageURL={imageURL} />
+          </div> : (
+            route === 'signin' 
+            ? <SignIn onRouteChange={this.onRouteChange} />
+            : <Register onRouteChange={this.onRouteChange} />
+          )
+        }
+           
+         
+        
       </div>
     );
   }
