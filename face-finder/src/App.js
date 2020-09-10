@@ -6,7 +6,6 @@ import Navigation from './components/Navigation/Navigation';
 import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 import Logo from './components/Logo/Logo';
-import Rank from './components/Rank/Rank';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import FaceDetection from './components/FaceDetection/FaceDetection';
 
@@ -35,8 +34,27 @@ class App extends Component {
       imageURL: '',
       box: '',
       route: 'signin',
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        dateJoined: new Date()
+      }
     }
+  }
+
+  loadUserValues = (data) => {
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        entries: data.entries,
+        dateJoined: data.dateJoined
+      }
+    })
   }
 
   // The idea is to figure out your state variables, and then write methods that handle
@@ -65,7 +83,7 @@ class App extends Component {
   // If you use curly brace syntax, usage of "this" could end up 
   // referring to the specific DOM element that triggered this method call
   // This event parameter gets triggered by the DOM element that wants to update the state
-  //    We are listening for any calls made down in the child components
+  // We are listening for any calls made down in the child components
   onInputChange = (event) => {
     this.setState({
       input: event.target.value
@@ -117,13 +135,12 @@ class App extends Component {
           ? <div>
 
             <Logo />
-            <Rank />
             <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
             <FaceDetection box={box} imageURL={imageURL} />
           </div> : (
             route === 'signin'
-              ? <SignIn onRouteChange={this.onRouteChange} />
-              : <Register onRouteChange={this.onRouteChange} />
+              ? <SignIn loadUserValues={this.loadUserValues} onRouteChange={this.onRouteChange} />
+              : <Register loadUserValues={this.loadUserValues} onRouteChange={this.onRouteChange} />
           )
         }
       </div>

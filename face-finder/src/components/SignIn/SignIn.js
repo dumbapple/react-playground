@@ -10,34 +10,29 @@ class Signin extends React.Component {
   }
 
   onEmailChange = (event) => {
-    this.setState({signInEmail: event.target.value})
+    this.setState({ signInEmail: event.target.value })
   }
 
   onPasswordChange = (event) => {
-    this.setState({signInPassword: event.target.value})
+    this.setState({ signInPassword: event.target.value })
   }
 
   onSubmitSignIn = () => {
     fetch('http://localhost:3000/signin', {
       method: 'post',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: this.state.signInEmail,
         password: this.state.signInPassword
       })
     })
       .then(response => response.json())
-      .then(data => {
-        if (data === 'Success') {
+      .then(user => {
+        if (user.id) {
+          this.props.loadUserValues(user)
           this.props.onRouteChange('home');
         }
       })
-      // .then(user => {
-      //   if (user.id) {
-      //     this.props.loadUser(user)
-      //     this.props.onRouteChange('home');
-      //   }
-      // })
   }
 
   render() {
@@ -78,7 +73,7 @@ class Signin extends React.Component {
               />
             </div>
             <div className="lh-copy mt3">
-              <p  onClick={() => onRouteChange('register')} className="f6 link dim black db pointer">Register</p>
+              <p onClick={() => onRouteChange('register')} className="f6 link dim black db pointer">Register</p>
             </div>
           </div>
         </main>
