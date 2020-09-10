@@ -10,21 +10,20 @@ import Rank from './components/Rank/Rank';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import FaceDetection from './components/FaceDetection/FaceDetection';
 
-
 const app = new Clarifai.App({
   apiKey: 'b9f1d2a6641041f18de332eab1e21dd7'
- });
+});
 
 const particlesOptions = {
-  particles: { 
-      number: { 
-        value: 200, 
-        density: { 
-          enable: true, 
-          value_area: 1000, 
-        } 
-      }, 
+  particles: {
+    number: {
+      value: 200,
+      density: {
+        enable: true,
+        value_area: 1000,
+      }
     },
+  },
 }
 
 class App extends Component {
@@ -39,9 +38,9 @@ class App extends Component {
       isSignedIn: false
     }
   }
+
   // The idea is to figure out your state variables, and then write methods that handle
   // any change to these state variables
-
 
   calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -53,7 +52,7 @@ class App extends Component {
       leftCol: clarifaiFace.left_col * width,
       topRow: clarifaiFace.top_row * height,
       rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height) 
+      bottomRow: height - (clarifaiFace.bottom_row * height)
     }
   }
 
@@ -78,15 +77,15 @@ class App extends Component {
       imageURL: this.state.input
     });
     app.models
-    .predict(
-      Clarifai.FACE_DETECT_MODEL, 
-      this.state.input)
-    .then((response) => {
+      .predict(
+        Clarifai.FACE_DETECT_MODEL,
+        this.state.input)
+      .then((response) => {
         this.drawDetectionArea(this.calculateFaceLocation(response));
       })
-    .catch((err) => {
+      .catch((err) => {
         console.log(err);
-    });
+      });
   }
 
   onRouteChange = (route) => {
@@ -94,15 +93,15 @@ class App extends Component {
     if (route === 'signout') {
       this.setState({
         isSignedIn: false
-      })
-    } else if (route ==='home') {
+      });
+    } else if (route === 'home') {
       this.setState({
         isSignedIn: true
-      })
+      });
     }
     this.setState({
       route: route
-    })
+    });
   }
 
   // Remember to use "this.<prop>"!
@@ -111,25 +110,22 @@ class App extends Component {
     return (
       <div>
         <Particles className='particles'
-        params={particlesOptions} 
-      />
-        <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn}/>
-        {route === 'home' 
-        ? <div>
-            
+          params={particlesOptions}
+        />
+        <Navigation onRouteChange={this.onRouteChange} isSignedIn={isSignedIn} />
+        {route === 'home'
+          ? <div>
+
             <Logo />
             <Rank />
             <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
             <FaceDetection box={box} imageURL={imageURL} />
           </div> : (
-            route === 'signin' 
-            ? <SignIn onRouteChange={this.onRouteChange} />
-            : <Register onRouteChange={this.onRouteChange} />
+            route === 'signin'
+              ? <SignIn onRouteChange={this.onRouteChange} />
+              : <Register onRouteChange={this.onRouteChange} />
           )
         }
-           
-         
-        
       </div>
     );
   }
